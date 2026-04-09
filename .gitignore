@@ -54,3 +54,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Internal planning docs
+PRD.md
