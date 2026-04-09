@@ -33,5 +33,11 @@ select = ["E", "F", "I", "B", "UP"]
 python_version = "3.11"
 strict = true
 
+# pymupdf ships py.typed but has incomplete annotations (open, close, tobytes).
+# Relax untyped-call checking only in the module that interfaces with it.
+[[tool.mypy.overrides]]
+module = "app.services.converter"
+disallow_untyped_calls = false
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
