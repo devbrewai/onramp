@@ -3,6 +3,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 DocumentType = Literal["government_id", "proof_of_address", "income_verification"]
+RiskScore = Literal["low", "medium", "high"]
 
 
 class ExtractedField(BaseModel):
@@ -35,7 +36,7 @@ class ProcessResponse(BaseModel):
     document_subtype: str
     document_type_confidence: float
     is_expired: bool
-    risk_score: str = "low"
+    risk_score: RiskScore = "low"
     processing_time_ms: int
     fields: list[ExtractedField]
     risk_flags: list[str] = []
