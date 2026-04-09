@@ -15,11 +15,13 @@ This directory contains the Architecture Decision Records (ADRs) for the Onramp 
 | [6](0006-lazy-agent-initialization.md) | Lazy agent initialization | Accepted |
 | [7](0007-mypy-override-for-pymupdf.md) | Per-module mypy override for PyMuPDF stubs | Accepted |
 | [8](0008-committed-sample-documents.md) | Committed sample documents with generator scripts | Accepted |
+| [9](0009-post-processing-validation.md) | Post-processing validation with immutable field copies | Accepted |
+| [10](0010-deterministic-risk-scoring.md) | Deterministic risk scoring over LLM-based assessment | Accepted |
 
 ## Adding a new ADR
 
 1. Copy an existing ADR as a template
-2. Number it sequentially (next: `0009`)
+2. Number it sequentially (next: `0011`)
 3. Include: Context (the problem), Decision (what we chose), Consequences (trade-offs)
 4. Set status to `Accepted`, `Superseded`, or `Deprecated`
 5. Update this index
