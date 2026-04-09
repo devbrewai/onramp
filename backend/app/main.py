@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routes import health
+from app.routes import health, process, samples
 
 app = FastAPI(title="Onramp API", version="1.0.0")
 
@@ -15,3 +15,5 @@ app.add_middleware(
 )
 
 app.include_router(health.router, prefix="/api")
+app.include_router(process.router, prefix="/api")
+app.include_router(samples.router, prefix="/api")
