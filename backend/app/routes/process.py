@@ -13,6 +13,7 @@ from app.config import settings
 from app.models.document import ProcessResponse
 from app.services.converter import to_images
 from app.services.extractor import extract_document
+from app.services.validator import validate_extraction
 
 router = APIRouter()
 
@@ -38,6 +39,7 @@ async def process_document(
     images = to_images(file_bytes, content_type)
     # Process only the first page for extraction
     result = await extract_document(images[0])
+    validated = validate_extraction(result)
 
     elapsed_ms = int((time.perf_counter() - start) * 1000)
 
@@ -46,10 +48,12 @@ async def process_document(
         document_type=result.document_type,
         document_subtype=result.document_subtype,
         document_type_confidence=result.document_type_confidence,
-        is_expired=result.is_expired,
+        is_expired=validated.is_expired,
+        risk_score=validated.risk_score,
         processing_time_ms=elapsed_ms,
-        fields=result.fields,
-        risk_flags=result.risk_flags,
+        fields=validated.fields,
+        risk_flags=validated.risk_flags,
+        validation_warnings=validated.validation_warnings,
     )
 
 
