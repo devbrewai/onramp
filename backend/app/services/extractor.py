@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from pydantic_ai import Agent, BinaryContent
 
 from app.config import settings
@@ -67,6 +69,13 @@ def _get_agent() -> Agent[None, LLMExtractionResult]:
     """Lazily create the Pydantic AI agent so import works without an API key."""
     global _agent  # noqa: PLW0603
     if _agent is None:
+        # Pydantic AI providers read API keys from os.environ, but our keys
+        # come from .env via pydantic-settings. Bridge the gap here so the
+        # provider-agnostic model string (e.g. "anthropic:claude-sonnet-4-6")
+        # can resolve without Anthropic-specific constructor args.
+        if settings.anthropic_api_key:
+            os.environ.setdefault("ANTHROPIC_API_KEY", settings.anthropic_api_key)
+
         _agent = Agent(
             settings.llm_model,
             output_type=LLMExtractionResult,
