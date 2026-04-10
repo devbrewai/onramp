@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: str = "http://localhost:5173"
     log_level: str = "info"
 
     # LLM — provider-agnostic via Pydantic AI model strings
@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     max_file_size_mb: int = 10
 
     model_config = SettingsConfigDict(env_file=".env", env_prefix="")
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [s.strip() for s in self.cors_origins.split(",")]
 
 
 settings = Settings()
