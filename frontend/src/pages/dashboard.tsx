@@ -14,6 +14,12 @@ import {
   type DocumentTag,
   type RiskLevel,
 } from "@/lib/mock-data"
+import {
+  getSessionCount,
+  incrementSessionCount,
+  isSessionLimitReached,
+  SESSION_LIMIT,
+} from "@/lib/rate-limit"
 import type {
   DashboardView,
   DocumentType,
@@ -38,17 +44,33 @@ export function Dashboard() {
   const [view, setView] = useState<DashboardView>({ status: "idle" })
   const [allApplicants, setAllApplicants] =
     useState<Applicant[]>(mockApplicants)
+  const [docsUsed, setDocsUsed] = useState(getSessionCount)
 
   const handleFileUpload = (file: File) => {
+    if (isSessionLimitReached()) {
+      setView({
+        status: "error",
+        message: `Session limit reached (${SESSION_LIMIT} documents). Refresh the page to start a new session.`,
+      })
+      return
+    }
     setView({ status: "processing", file, sampleId: null })
   }
 
   const handleSampleClick = (sampleId: string) => {
+    if (isSessionLimitReached()) {
+      setView({
+        status: "error",
+        message: `Session limit reached (${SESSION_LIMIT} documents). Refresh the page to start a new session.`,
+      })
+      return
+    }
     setView({ status: "processing", file: null, sampleId })
   }
 
   const handleComplete = useCallback(
     (result: ProcessResponse, previewUrl: string | null) => {
+      setDocsUsed(incrementSessionCount())
       setView({ status: "results", result, previewUrl })
     },
     [],
@@ -105,7 +127,11 @@ export function Dashboard() {
 
         {view.status === "idle" && (
           <>
-            <UploadArea onUpload={handleFileUpload} />
+            <UploadArea
+              onUpload={handleFileUpload}
+              docsUsed={docsUsed}
+              sessionLimit={SESSION_LIMIT}
+            />
             <SampleDocumentCards onSampleClick={handleSampleClick} />
           </>
         )}
