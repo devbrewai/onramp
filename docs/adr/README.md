@@ -17,11 +17,14 @@ This directory contains the Architecture Decision Records (ADRs) for the Onramp 
 | [8](0008-committed-sample-documents.md) | Committed sample documents with generator scripts | Accepted |
 | [9](0009-post-processing-validation.md) | Post-processing validation with immutable field copies | Accepted |
 | [10](0010-deterministic-risk-scoring.md) | Deterministic risk scoring over LLM-based assessment | Accepted |
+| [11](0011-native-fetch-over-axios.md) | Native fetch over axios for API client | Accepted |
+| [12](0012-simulated-pipeline-stages.md) | Simulated pipeline stages over real streaming | Accepted |
+| [13](0013-lifted-usestate-over-context.md) | Lifted useState over context or zustand | Accepted |
 
 ## Adding a new ADR
 
 1. Copy an existing ADR as a template
-2. Number it sequentially (next: `0011`)
+2. Number it sequentially (next: `0014`)
 3. Include: Context (the problem), Decision (what we chose), Consequences (trade-offs)
 4. Set status to `Accepted`, `Superseded`, or `Deprecated`
 5. Update this index
