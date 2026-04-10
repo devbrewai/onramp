@@ -7,36 +7,48 @@ const percentFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 })
 
+type Props = {
+  approvedCount: number
+  reviewCount: number
+}
+
 type Stat = {
   label: string
   value: string
   helper: string
 }
 
-const stats: Stat[] = [
-  {
-    label: "Applicants Processed",
-    value: numberFormatter.format(dashboardStats.applicantsProcessed),
-    helper: "Last 30 days",
-  },
-  {
-    label: "Avg Verification Time",
-    value: `${dashboardStats.avgVerificationSeconds}s`,
-    helper: "vs. 24-48hr manual review",
-  },
-  {
-    label: "Auto-Approval Rate",
-    value: percentFormatter.format(dashboardStats.autoApprovalRate),
-    helper: "Approved without human review",
-  },
-  {
-    label: "Pending Review",
-    value: numberFormatter.format(dashboardStats.pendingReview),
-    helper: "Awaiting compliance team",
-  },
-]
+function buildStats(approvedCount: number, reviewCount: number): Stat[] {
+  return [
+    {
+      label: "Applicants Processed",
+      value: numberFormatter.format(
+        dashboardStats.applicantsProcessed + approvedCount + reviewCount,
+      ),
+      helper: "Last 30 days",
+    },
+    {
+      label: "Avg Verification Time",
+      value: `${dashboardStats.avgVerificationSeconds}s`,
+      helper: "vs. 24-48hr manual review",
+    },
+    {
+      label: "Auto-Approval Rate",
+      value: percentFormatter.format(dashboardStats.autoApprovalRate),
+      helper: "Approved without human review",
+    },
+    {
+      label: "Pending Review",
+      value: numberFormatter.format(
+        dashboardStats.pendingReview + reviewCount,
+      ),
+      helper: "Awaiting compliance team",
+    },
+  ]
+}
 
-export function StatsCards() {
+export function StatsCards({ approvedCount, reviewCount }: Props) {
+  const stats = buildStats(approvedCount, reviewCount)
   return (
     <section
       aria-label="Dashboard statistics"

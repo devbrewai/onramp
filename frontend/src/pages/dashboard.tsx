@@ -118,7 +118,18 @@ export function Dashboard() {
         </p>
       </div>
 
-      <StatsCards />
+      <StatsCards
+        approvedCount={
+          allApplicants.filter(
+            (a) => !mockApplicants.includes(a) && a.status === "Approved",
+          ).length
+        }
+        reviewCount={
+          allApplicants.filter(
+            (a) => !mockApplicants.includes(a) && a.status === "Review Needed",
+          ).length
+        }
+      />
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
