@@ -1,5 +1,5 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from "react"
-import { Upload } from "lucide-react"
+import { AlertTriangle, Upload } from "lucide-react"
 
 const ACCEPTED_TYPES = new Set([
   "application/pdf",
@@ -118,7 +118,8 @@ export function UploadArea({ onUpload, docsUsed, sessionLimit }: Props) {
       {error && (
         <p className="mt-2 text-center text-sm text-red-600">{error}</p>
       )}
-      <p className="mt-3 text-center text-xs text-zinc-500">
+      <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-amber-600">
+        <AlertTriangle className="size-3.5" />
         DEMO ONLY. Do not upload real identity documents.
       </p>
       {docsUsed !== undefined && sessionLimit !== undefined && (

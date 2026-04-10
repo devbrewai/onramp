@@ -105,9 +105,9 @@ function statusCircleClass(status: StageState["status"]): string {
     case "pending":
       return "bg-zinc-100"
     case "active":
-      return "bg-emerald-100"
+      return "bg-emerald-100 animate-pulse"
     case "complete":
-      return "bg-emerald-500"
+      return "bg-emerald-500 scale-110"
     case "error":
       return "bg-red-500"
   }

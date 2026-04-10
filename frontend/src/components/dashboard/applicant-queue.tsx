@@ -32,7 +32,7 @@ export function ApplicantQueue({ applicants }: { applicants: Applicant[] }) {
           {applicants.length} verified applicants
         </p>
       </div>
-      <div className="rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white">
         <Table>
           <TableHeader>
             <TableRow className="bg-zinc-50/60">

@@ -44,7 +44,7 @@ export function ResultsView({
     result.document_subtype.slice(1).replace(/_/g, " ")
 
   return (
-    <Card>
+    <Card className="animate-in fade-in slide-in-from-bottom-4 duration-300">
       <CardContent>
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Left panel: preview */}
@@ -106,11 +106,16 @@ export function ResultsView({
             {/* Extracted fields */}
             <div className="space-y-3">
               {fields.map((field, i) => (
-                <FieldRow
+                <div
                   key={field.field_name}
-                  field={field}
-                  onChange={(v) => updateField(i, v)}
-                />
+                  className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <FieldRow
+                    field={field}
+                    onChange={(v) => updateField(i, v)}
+                  />
+                </div>
               ))}
             </div>
 
@@ -176,37 +181,48 @@ function ConfidenceBadge({
   pct: number
 }) {
   let cls: string
+  let tooltip: string
   if (confidence >= 0.9) {
     cls = "bg-emerald-100 text-emerald-700 border-transparent"
+    tooltip = "High confidence \u2014 auto-verified"
   } else if (confidence >= 0.7) {
     cls = "bg-amber-100 text-amber-700 border-transparent"
+    tooltip = "Medium confidence \u2014 review recommended"
   } else {
     cls = "bg-red-100 text-red-700 border-transparent"
+    tooltip = "Low confidence \u2014 manual review required"
   }
 
   return (
-    <Badge className={cls + " shrink-0 tabular-nums"}>
+    <Badge className={cls + " shrink-0 tabular-nums"} title={tooltip}>
       {pct}%
     </Badge>
   )
 }
 
 function RiskBadge({ score }: { score: string }) {
-  const config: Record<string, { label: string; cls: string }> = {
+  const config: Record<string, { label: string; cls: string; tip: string }> = {
     low: {
       label: "Low Risk",
       cls: "bg-emerald-100 text-emerald-700 border-transparent",
+      tip: "Low risk \u2014 high confidence across all fields",
     },
     medium: {
       label: "Medium Risk",
       cls: "bg-amber-100 text-amber-700 border-transparent",
+      tip: "Medium risk \u2014 some fields need review",
     },
     high: {
       label: "High Risk",
       cls: "bg-red-100 text-red-700 border-transparent",
+      tip: "High risk \u2014 validation flags detected",
     },
   }
   const c = config[score] ?? config.low
 
-  return <Badge className={c.cls + " text-sm"}>{c.label}</Badge>
+  return (
+    <Badge className={c.cls + " text-sm"} title={c.tip}>
+      {c.label}
+    </Badge>
+  )
 }
