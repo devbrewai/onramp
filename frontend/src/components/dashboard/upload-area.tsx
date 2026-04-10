@@ -1,9 +1,35 @@
-import { useRef, useState, type DragEvent } from "react"
+import { useRef, useState, type ChangeEvent, type DragEvent } from "react"
 import { Upload } from "lucide-react"
 
-export function UploadArea() {
+const ACCEPTED_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+])
+const MAX_SIZE_MB = 10
+
+type Props = {
+  onUpload: (file: File) => void
+}
+
+export function UploadArea({ onUpload }: Props) {
   const [isDragOver, setIsDragOver] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const validateAndUpload = (file: File) => {
+    setError(null)
+    if (!ACCEPTED_TYPES.has(file.type)) {
+      setError("Unsupported file type. Please upload a PDF, PNG, or JPG.")
+      return
+    }
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      setError(`File exceeds ${MAX_SIZE_MB}MB limit.`)
+      return
+    }
+    onUpload(file)
+  }
 
   const handleDragOver = (event: DragEvent<HTMLButtonElement>) => {
     event.preventDefault()
@@ -18,7 +44,15 @@ export function UploadArea() {
   const handleDrop = (event: DragEvent<HTMLButtonElement>) => {
     event.preventDefault()
     setIsDragOver(false)
-    // File handling is wired up in DEV-110 (Frontend Integration milestone).
+    const file = event.dataTransfer.files[0]
+    if (file) validateAndUpload(file)
+  }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) validateAndUpload(file)
+    // Reset input so the same file can be re-selected
+    event.target.value = ""
   }
 
   const handleClick = () => {
@@ -57,7 +91,16 @@ export function UploadArea() {
           <p className="mt-1 text-sm text-zinc-500">Supports PDF, PNG, JPG</p>
         </div>
       </button>
-      <input ref={inputRef} type="file" accept=".pdf,.png,.jpg,.jpeg" hidden />
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.png,.jpg,.jpeg"
+        onChange={handleChange}
+        hidden
+      />
+      {error && (
+        <p className="mt-2 text-center text-sm text-red-600">{error}</p>
+      )}
       <p className="mt-3 text-center text-xs text-zinc-500">
         DEMO ONLY. Do not upload real identity documents.
       </p>

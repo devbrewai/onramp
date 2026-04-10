@@ -1,4 +1,4 @@
-import { type ComponentType } from "react"
+import { type ComponentType, type KeyboardEvent } from "react"
 import { IdCard, MapPin, Receipt } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +17,11 @@ const iconForType: Record<
   income_verification: Receipt,
 }
 
-export function SampleDocumentCards() {
+type Props = {
+  onSampleClick: (sampleId: string) => void
+}
+
+export function SampleDocumentCards({ onSampleClick }: Props) {
   return (
     <section aria-label="Sample documents" className="mt-6">
       <h3 className="mb-3 text-sm font-medium text-zinc-700">
@@ -25,17 +29,41 @@ export function SampleDocumentCards() {
       </h3>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {sampleDocuments.map((doc) => (
-          <SampleCard key={doc.id} doc={doc} />
+          <SampleCard
+            key={doc.id}
+            doc={doc}
+            onClick={() => onSampleClick(doc.id)}
+          />
         ))}
       </div>
     </section>
   )
 }
 
-function SampleCard({ doc }: { doc: SampleDocument }) {
+function SampleCard({
+  doc,
+  onClick,
+}: {
+  doc: SampleDocument
+  onClick: () => void
+}) {
   const Icon = iconForType[doc.type]
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
-    <Card className="group cursor-pointer transition-colors hover:border-emerald-400 hover:shadow-sm">
+    <Card
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      className="group cursor-pointer transition-colors hover:border-emerald-400 hover:shadow-sm"
+    >
       <CardContent>
         <div className="flex items-start gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-100">

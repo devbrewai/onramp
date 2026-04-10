@@ -7,11 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  applicants,
-  type ApplicantStatus,
-  type RiskLevel,
-} from "@/lib/mock-data"
+import type { Applicant, ApplicantStatus, RiskLevel } from "@/lib/mock-data"
 
 const statusBadgeClass: Record<ApplicantStatus, string> = {
   Approved: "bg-emerald-100 text-emerald-700 border-transparent",
@@ -25,7 +21,7 @@ const riskBadgeClass: Record<RiskLevel, string> = {
   High: "bg-red-100 text-red-700 border-transparent",
 }
 
-export function ApplicantQueue() {
+export function ApplicantQueue({ applicants }: { applicants: Applicant[] }) {
   return (
     <section aria-label="Applicant queue">
       <div className="mb-3 flex items-baseline justify-between">
